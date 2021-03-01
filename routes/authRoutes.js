@@ -83,8 +83,13 @@ router.get('/getalluser', async (req, res) => {
 // USer Task start
 router.post('/addtask',upload.single('image'), async (req, res) => {  
     console.log(req.body,"body")
-        console.log(req.file.path,"file")    
-        var document=req.file.path
+        
+        if(req.file==undefined||req.file==""){
+            var document=""
+        }else{
+            var document=req.file.path
+        }
+        
     const {userid,taskname,taskdescription,createddate,role,status,parent,p1,p2,p3,p4,assign,startdate,duedate} = req.body;
     try {
         const task = new Task({userid,taskname,taskdescription,createddate,role,status,parent,p1,p2,p3,p4,assign,document,startdate,duedate})

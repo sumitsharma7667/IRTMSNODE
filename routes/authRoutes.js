@@ -14,9 +14,9 @@ var instance = new Razorpay({
   });
 const cors = require('cors');
 multer = require('multer')
-multer({
-    limits: { fieldSize: 2 * 1024 * 1024 }
-  })
+// multer({
+//     limits: { fieldSize: 2 * 1024 * 1024 }
+//   })
     router.use(cors({ origin: true }));
 //code for images
 var multer = require('multer')
@@ -25,7 +25,7 @@ var storage = multer.diskStorage({
         cb(null, './public/uploads/')
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + file.originalname)
+        cb(null,Date.now()+file.originalname)
     }
 })
 var upload = multer({ storage: storage })
@@ -81,11 +81,13 @@ router.get('/getalluser', async (req, res) => {
 })
 //end user 
 // USer Task start
-router.post('/addtask', async (req, res) => {  
-    console.log(req.body)
-    const {userid,taskname,taskdescription,createddate,role,status,parent,p1,p2,p3,p4,assign} = req.body;
+router.post('/addtask',upload.single('image'), async (req, res) => {  
+    console.log(req.body,"body")
+        console.log(req.file.path,"file")    
+        var document=req.file.path
+    const {userid,taskname,taskdescription,createddate,role,status,parent,p1,p2,p3,p4,assign,startdate,duedate} = req.body;
     try {
-        const task = new Task({userid,taskname,taskdescription,createddate,role,status,parent,p1,p2,p3,p4,assign})
+        const task = new Task({userid,taskname,taskdescription,createddate,role,status,parent,p1,p2,p3,p4,assign,document,startdate,duedate})
         await task.save();       
         res.send(task)       
     } catch (err) {
@@ -123,7 +125,6 @@ router.get('/gettask', async (req, res) => {
         return res.status(422).send({ error: "error for fetching profile data" })
     }
 })
-
 router.put('/updatetask',async (req, res) => {
     const {_id,taskname,taskdescription, userid,role,parent,status,p1,p2,p3,p4,assign} = req.body;
     Task.findByIdAndUpdate({_id},{taskname,taskdescription,userid,role,parent,status,p1,p2,p3,p4,assign},function(err,result){
@@ -136,7 +137,5 @@ router.put('/updatetask',async (req, res) => {
     })
 })
 // End User Task
-
-
 module.exports = router
 

@@ -40,12 +40,17 @@ const taskSchema = new Schema({
         type: String
     },
     startdate:{
-        type:String
+        type:String,
+        required: true
     },
     duedate:{
+        type:String,
+        required:true
+    },
+    document:{
         type:String
     }
-}, { timestamps: true }
+}, { timestamps:true }
 )
 
 mongoose.model('task', taskSchema);
